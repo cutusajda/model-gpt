@@ -1,0 +1,476 @@
+.container {
+  background-color: rgb(3, 0, 31);
+  color: white;
+  font-family: "Poppins", sans-serif;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.sidebar {
+  flex: 10%;
+  border-right: 1px solid rgb(100, 100, 100);
+}
+
+.main {
+  flex: 90%;
+}
+
+.logo {
+  width: 2.98rem;
+  height: 2.98rem;
+  border-radius: 0.95rem;
+  margin-right: 1rem;
+}
+
+.brand {
+  font-size: 1.6rem;
+}
+
+.upperSide {
+  padding: 2.5rem;
+  border-bottom: 1px solid rgb(100, 100, 100);
+  height: 70%;
+}
+
+.upperSideTop {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3.5rem;
+}
+
+.upperSideTop > img {
+  margin-right: 1.4rem;
+}
+
+.midBtn {
+  display: flex;
+  min-width: 15rem;
+  align-items: center;
+  justify-content: center;
+  background-color: #5a4bff;
+  border: None;
+  color: white;
+  padding: 0.7rem;
+  font-size: 1.2rem;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.midBtn:active {
+  transform: scale(0.98);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+
+.upperSideBottom {
+  max-height: 40vh;
+  overflow-y: scroll;
+}
+
+.upperSideBottom::-webkit-scrollbar {
+  display: none;
+}
+
+.query {
+  display: flex;
+  text-align: start;
+  align-items: center;
+  width: 15rem;
+  min-width: 15rem;
+  max-height: 2rem;
+  background: transparent;
+  color: rgba(222, 222, 222, 1);
+  font-size: 0.8rem;
+  padding: 1.5rem 1rem;
+  margin: 0.9rem auto;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(98, 98, 98, 1);
+  cursor: pointer;
+}
+
+.query > p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.query:active {
+  transform: scale(0.98);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+.query > img {
+  margin-right: 1.8rem;
+  object-fit: cover;
+  height: 1.2rem;
+}
+
+.addBtn {
+  height: 1rem;
+  padding-right: 1rem;
+}
+
+.lowerSide {
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.listItems {
+  margin: 0.75rem;
+  border: 1px solid wheat;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.listItemsImg {
+  margin: 1rem;
+  width: 2rem;
+  padding-right: 1rem;
+}
+
+.listItems:first-child > .listItemsImg {
+  margin-right: 0.3rem;
+}
+
+.listItems:last-child > .listItemsImg {
+  margin-right: 0.45rem;
+}
+
+.main {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+.chats {
+  overflow: hidden;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  width: 100%;
+  height: 78%;
+  padding: 1rem 2rem;
+  transition: all 0.5s ease-in-out;
+}
+
+.chats::-webkit-scrollbar {
+  display: none;
+}
+
+.chat {
+  margin: 1rem;
+  color: #efefef;
+  padding: 1.4rem 1.8rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: flex-start;
+  text-align: justify;
+}
+
+.chatImg {
+  object-fit: cover;
+  height: 3.5rem;
+  width: 3.5rem;
+  margin-right: 2rem;
+  border-radius: 0.5rem;
+}
+
+.gpt {
+  background: rgba(28, 30, 58, 1);
+  width: fit-content;
+  border-radius: 0.5rem;
+}
+
+.chatFooter {
+  background-color: rgb(3, 0, 31);
+  width: calc(77% - 9.5rem);
+  margin: auto 1rem 0 1rem;
+  padding: 1rem 0 0 0;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.inp {
+  padding: 0 0.5rem;
+  display: flex;
+  min-width: calc(100% - 2rem);
+  align-items: center;
+  border-radius: 0.5rem;
+  background: rgba(28, 30, 58, 1);
+}
+
+.inp > input {
+  width: calc(100% - 3rem);
+  outline: none;
+  padding: 1.25rem;
+  color: rgb(255, 255, 255);
+}
+
+.inp > input,
+.send {
+  background: transparent;
+  border: none;
+}
+
+.chatFooter > p {
+  text-align: center;
+  font-size: clamp(0.85rem, 0.85rem, 0.5rem);
+  margin: 2rem 0;
+  color: #b4b2b2;
+}
+
+.sendBtn {
+  text-decoration: none;
+  border: none;
+  padding: 12px 40px;
+  font-size: 16px;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s all;
+}
+
+.sendBtn:active {
+  transform: scale(0.98);
+  /* Scaling button to 0.98 to its original size */
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+  /* Lowering the shadow */
+}
+
+.loader {
+  width: 40px;
+  aspect-ratio: 2;
+  --_g: no-repeat radial-gradient(circle closest-side, #efefef 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: calc(100% / 3) 50%;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
+
+.mobile-navbar {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .mobile-navbar {
+    display: flex;
+    width: 100%;
+    position: fixed;
+    background-color: rgb(3, 0, 31);
+    border-bottom: 1px solid rgb(73, 73, 73);
+    padding: 1rem;
+    justify-content: space-between;
+  }
+
+  .mobile-navbar > .nav-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-right: 0.6rem;
+    border-radius: none;
+  }
+
+  .brand {
+    font-size: 1rem;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-dropdown-menu {
+    position: absolute;
+    top: 4.5rem;
+    right: 0;
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+  }
+
+  .mobile-dropdown-items {
+    text-align: center;
+    width: 100%;
+    padding: 1.2rem 0;
+  }
+
+  .mobile-dropdown-items:nth-child(2)  {
+    border-top: 1px solid rgb(116, 116, 116);
+    border-bottom: 1px solid rgb(116, 116, 116);
+  }
+
+  .mobile-dropdown-items:nth-child(3) {
+    border-bottom: 1px solid rgb(116, 116, 116);
+  }
+
+  .mobile-dropdown-items> p:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-dropdown-subitem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .mobile-dropdown-submenu {
+    margin-top: 1rem;
+    padding: 0.6rem 0.2rem;
+    font-size: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 5rem;
+    overflow: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .recent-query:active {
+    transform: scale(0.98);
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+  }
+
+  .recent-query > p {
+    margin: 0.4rem 0;
+    padding: 0.4rem 0.4rem;
+    border-radius: 0.35rem;
+    border: 1px solid rgb(116, 116, 116);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .main {
+    padding-top: 4.4rem;
+    height: 100vh;
+  }
+
+  .chats {
+    height: 85%;
+    padding: 0;
+  }
+
+  .chat {
+    width: 95%;
+    height: auto;
+    margin: 1rem 0.5rem;
+    padding: 1rem 0.8rem;
+  }
+
+  .chat > .chatImg {
+    width: 3rem;
+    height: 3rem;
+    margin-right: 0.8rem;
+  }
+
+  .chat > .txt {
+    font-size: 0.7rem;
+  }
+
+  .chatFooter {
+    width: 100%;
+  }
+
+  .chatFooter > p {
+    text-align: center;
+    padding: 0 1rem;
+    margin: 1rem;
+    font-size: 0.58rem;
+  }
+
+  .sendBtn {
+    width: 2.5rem;
+    padding: 0.5rem 0.8rem;
+  }
+
+  .inp {
+    padding: 0;
+    width: 2rem;
+  }
+
+  .inp > input {
+    height: 2rem;
+    width: calc(100% - 3rem);
+  }
+  .loader {
+    width: 1.8rem;
+  }
+}
+
+@media only screen and (max-width: 280px) {
+  .chat {
+    width: 95%;
+    margin: 1rem 0.5rem;
+    padding: 1rem 0.8rem;
+  }
+
+  .chat > .chatImg {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.5rem;
+  }
+
+  .chat > .txt {
+    font-size: 0.6rem;
+  }
+
+  .sendBtn {
+    width: 2.5rem;
+    padding: 0.5rem 0.8rem;
+  }
+
+  .inp {
+    padding: 0;
+    width: 2rem;
+  }
+
+  .inp > input {
+    height: 2rem;
+    width: calc(100% - 3rem);
+  }
+
+  .chatFooter {
+    text-align: center;
+  }
+
+  .chatFooter > p {
+    font-size: 0.5rem;
+    margin: 1rem 0;
+  }
+}
