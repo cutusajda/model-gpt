@@ -213,8 +213,16 @@
 .inp > input {
   width: calc(100% - 3rem);
   outline: none;
-  padding: 1.25rem;
+  padding: 1.25rem 0.4rem;
   color: rgb(255, 255, 255);
+}
+
+.mic {
+  padding-bottom: 0.1rem;
+}
+
+.mic:active {
+  transform: scale(0.98);
 }
 
 .inp > input,
@@ -427,6 +435,7 @@
   .inp > input {
     height: 2rem;
     width: calc(100% - 3rem);
+    padding: 1.25rem 0.4rem;
   }
   .loader {
     width: 1.8rem;

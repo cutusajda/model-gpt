@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import talk from "../../assets/mic.json";
 
 const Chat = () => {
   const messageEnd = useRef(null);
@@ -52,7 +53,7 @@ const Chat = () => {
     setIsLoading(true); // Set loading state to true before API call
 
     // Closing Mobile Navbar Menu
-    setIsOpen(false)
+    setIsOpen(false);
 
     const data = await APIService(inputValue);
     setIsLoading(false); // Set loading state to false after API call
@@ -79,7 +80,7 @@ const Chat = () => {
     if (active_message.message.length === 1) {
       active_message.title = inputValue;
     }
-    
+
     active_message.message.push(user_message);
     active_message.message.push(bot_message);
     localStorage.setItem("chat", JSON.stringify(local_storage_chat));
@@ -147,7 +148,7 @@ const Chat = () => {
       localStorage.setItem("chat", JSON.stringify(old_chats));
 
       // Change Active Chat When New Chat Created
-      handleSelectChat(last_id + 1)
+      handleSelectChat(last_id + 1);
 
       // Set Scroll Chat To End False When New Chat Is Created
       messageEnd.current.scrollIntoView(false);
@@ -168,6 +169,7 @@ const Chat = () => {
   };
 
   const playerRef = useRef();
+  const talkRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [subMenu, setSubMenu] = useState(false);
 
@@ -176,16 +178,30 @@ const Chat = () => {
     setIsOpen(!isOpen);
   };
 
+  // Function To Handle Mic Animation
+  const onTalkPress = () => {
+    let counter = 0;
+    talkRef.current?.playFromBeginning();
+    const intervalId = setInterval(() => {
+      if (counter < 2) {
+        talkRef.current?.playFromBeginning();
+        counter++;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 3000);
+  };
+
   const onSubMenuPress = () => {
     setSubMenu(!subMenu);
   };
 
   const clearChats = () => {
-    if (window.confirm('Are you sure to delete all chats?')) {
+    if (window.confirm("Are you sure to delete all chats?")) {
       localStorage.removeItem("chat");
       window.location.reload();
     }
-  }
+  };
 
   return (
     <>
@@ -235,10 +251,7 @@ const Chat = () => {
                 >
                   <p>New Chat</p>
                 </div>
-                <div
-                  className="mobile-dropdown-items"
-                  onClick={clearChats}
-                >
+                <div className="mobile-dropdown-items" onClick={clearChats}>
                   <p>Clear Chat</p>
                 </div>
               </div>
@@ -299,6 +312,9 @@ const Chat = () => {
           </div>
           <div className="chatFooter">
             <div className="inp">
+              <div className="mic" onClick={onTalkPress}>
+                <Player ref={talkRef} icon={talk} className="mic-icon" />
+              </div>
               <input
                 type="text"
                 placeholder="Type a message..."
