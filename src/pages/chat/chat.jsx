@@ -16,12 +16,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import talk from "../../assets/mic.json";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const Chat = () => {
-  const messageEnd = useRef(null);
-  const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([]);
-
   let chat_template = {
     id: 0,
     title: "Untitled Chat",
@@ -33,17 +32,32 @@ const Chat = () => {
     ],
   };
 
+  // Required Configurations For Speech-To-Text
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+  const startListning = () =>
+    SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
+
+  const messageEnd = useRef(null);
+  const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState([]);
   const [query, setQuery] = useState([chat_template]);
 
   // State to Change Load and Unload Loader
   const [isLoading, setIsLoading] = useState(false);
-
   const [activeChat, isActive] = useState(0);
 
+  // Function To Change Input Value
   const handleChange = (event) => {
     setInputValue(event.target.value);
+    setInputValue("");
   };
 
+  // Function to POST Prompt to GPT4 Turbo
   const handleClick = async () => {
     const text = inputValue;
 
@@ -88,10 +102,16 @@ const Chat = () => {
   };
 
   useEffect(() => {
+    // Scroll to Bottom Message
     if (messages.length > 1) {
       messageEnd.current.scrollIntoView();
     }
-  }, [messages]);
+
+    // Listning: True > Update Transcribe > Update Input Field
+    if (listening) {
+      setInputValue(transcript);
+    }
+  }, [messages, listening, transcript]);
 
   useLayoutEffect(() => {
     let local_storage_chat = localStorage.getItem("chat");
@@ -180,28 +200,49 @@ const Chat = () => {
 
   // Function To Handle Mic Animation
   const onTalkPress = () => {
+    // Function to Start Speech Recognition
+    startListning();
+
+    // Reset The Input Field Value
+    setInputValue("");
+
     let counter = 0;
     talkRef.current?.playFromBeginning();
+
+    // Function to Play-Pause Speech Recognition and Mic Animation
     const intervalId = setInterval(() => {
       if (counter < 2) {
         talkRef.current?.playFromBeginning();
         counter++;
       } else {
         clearInterval(intervalId);
+
+        // Function to Stop Speech Recognition
+        SpeechRecognition.stopListening();
+
+        // Function to Reset Speech Recognition Transcription
+        resetTranscript();
       }
-    }, 3000);
+    }, 2700);
   };
 
+  // Method to
   const onSubMenuPress = () => {
     setSubMenu(!subMenu);
   };
 
+  // Function To Clear Recent Chats
   const clearChats = () => {
     if (window.confirm("Are you sure to delete all chats?")) {
       localStorage.removeItem("chat");
       window.location.reload();
     }
   };
+
+  // Global Variable to Ask For Microphone Permission
+  if (!browserSupportsSpeechRecognition) {
+    return null;
+  }
 
   return (
     <>
@@ -313,12 +354,18 @@ const Chat = () => {
           <div className="chatFooter">
             <div className="inp">
               <div className="mic" onClick={onTalkPress}>
-                <Player ref={talkRef} icon={talk} className="mic-icon" />
+                <Player
+                  size={38}
+                  ref={talkRef}
+                  icon={talk}
+                  className="mic-icon"
+                />
               </div>
               <input
                 type="text"
                 placeholder="Type a message..."
                 onChange={handleChange}
+                onClick={() => setIsOpen(false)}
                 value={inputValue}
                 onKeyDown={handleEnter}
               />
