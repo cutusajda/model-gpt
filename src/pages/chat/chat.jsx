@@ -108,6 +108,9 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeChat, isActive] = useState(0);
 
+  const [theme, setTheme] = useState('dark-theme');
+
+
   // Function To Change Input Value
   const handleChange = (event) => {
     setInputValue(event.target.value);
@@ -196,7 +199,9 @@ const Chat = () => {
       setSystemState(false);
       resetTranscript();
     }
-  }, [messages, listening, systemState, transcript, resetTranscript]);
+
+    document.body.className = theme;
+  }, [messages, listening, systemState, transcript, resetTranscript, theme]);
 
   useLayoutEffect(() => {
     let local_storage_chat = localStorage.getItem("chat");
@@ -328,6 +333,7 @@ const Chat = () => {
   if (!browserSupportsSpeechRecognition) {
     return null;
   }
+
 
   const changeColorScheme = () => {
     

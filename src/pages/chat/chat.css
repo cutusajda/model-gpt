@@ -1,9 +1,16 @@
 .light-theme {
-  --container-main: rgb(229, 229, 233);
+  --container-main: rgb(245, 245, 250);
   --container-color: rgba(255, 255, 255, 0.87);
   --gpt-background: rgba(28, 30, 58, 1);
+  --brand-color: black;
+  --sidebar-border: rgb(100, 100, 100);
+  --sidebar-query-text: rgb(7, 0, 0);
+  --uppertop-border: rgb(100, 100, 100);
+  --lowerbar-text: rgb(69, 69, 6);
+  --lowerbar-border-color: rgb(15, 15, 15);
   --input-background: rgba(28, 30, 58, 1);
   --input-text: rgb(255, 255, 255);
+  --chat-text: #4fc2c0;
   --chat-footer-text: #b4b2b2;
   --mobile-nav-background: rgb(3, 0, 31);
   --mobile-nav-border: rgb(73, 73, 73);
@@ -16,8 +23,15 @@
   --container-main: rgb(3, 0, 31);
   --container-color: rgba(255, 255, 255, 0.87);
   --gpt-background: rgba(28, 30, 58, 1);
+  --brand-color: rgb(249, 247, 247);
+  --sidebar-border: rgb(100, 100, 100);
+  --sidebar-query-text: rgba(222, 222, 222, 1);
+  --uppertop-border: rgb(100, 100, 100);
+  --lowerbar-text: rgb(219, 219, 211);
+  --lowerbar-border-color: wheat;
   --input-background: rgba(28, 30, 58, 1);
   --input-text: rgb(255, 255, 255);
+  --chat-text: #efefef;
   --chat-footer-text: #b4b2b2;
   --mobile-nav-background: rgb(3, 0, 31);
   --mobile-nav-border: rgb(73, 73, 73);
@@ -37,7 +51,7 @@
 
 .sidebar {
   flex: 10%;
-  border-right: 1px solid rgb(100, 100, 100);
+  border-right: 1px solid var(--sidebar-border);
 }
 
 .main {
@@ -53,11 +67,12 @@
 
 .brand {
   font-size: 1.6rem;
+  color: var(--brand-color);
 }
 
 .upperSide {
   padding: 2.5rem;
-  border-bottom: 1px solid rgb(100, 100, 100);
+  border-bottom: 1px solid var(--uppertop-border);
   height: 70%;
 }
 
@@ -109,7 +124,7 @@
   min-width: 15rem;
   max-height: 2rem;
   background: transparent;
-  color: rgba(222, 222, 222, 1);
+  color: var(--sidebar-query-text);
   font-size: 0.8rem;
   padding: 1.5rem 1rem;
   margin: 0.9rem auto;
@@ -141,6 +156,7 @@
 
 .lowerSide {
   display: flex;
+  color: var(--lowerbar-text);
   height: 20%;
   flex-direction: column;
   justify-content: center;
@@ -149,7 +165,7 @@
 
 .listItems {
   margin: 0.75rem;
-  border: 1px solid wheat;
+  border: 1px solid var(--lowerbar-border-color);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -194,7 +210,7 @@
 
 .chat {
   margin: 1rem;
-  color: #efefef;
+  color: var(--chat-text);
   padding: 1.4rem 1.8rem;
   font-size: 1rem;
   display: flex;
