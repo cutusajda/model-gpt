@@ -2,29 +2,33 @@
   --container-main: #FFE6E6;
   --container-color: rgba(255, 255, 255, 0.87);
   --gpt-background: #E1AFD1;
-  --brand-color: black;
+  --gpt-text: #fff;
+  --brand-color: #231d43;
   --sidebar-border: rgb(100, 100, 100);
   --sidebar-query-text: rgb(7, 0, 0);
   --uppertop-border: rgb(100, 100, 100);
+  --list-items-icons: #AD88C6;
   --lowerbar-text: rgb(69, 69, 6);
   --lowerbar-border-color: rgb(15, 15, 15);
   --input-background: #E1AFD1;
-  --input-text: rgb(255, 255, 255);
+  --input-text: rgb(246, 244, 244);
   --chat-btn-bg: #7469B6;
   --chat-text: rgb(3, 0, 31);
   --chat-footer-bg: #FFE6E6;
-  --chat-footer-text: #b4b2b2;
-  --mobile-nav-background: rgb(3, 0, 31);
-  --mobile-nav-border: rgb(73, 73, 73);
+  --chat-footer-text: #9b9b9b;
+  --mobile-nav-background: #AD88C6;
+  --mobile-nav-border: #AD88C6;
+  --mobile-nav-dropdown-text: #231c4b;
   --mobile-nav-dropdown-bg: rgba(255, 255, 255, 0.2);
-  --mobile-nav-dropdown-border: rgb(116, 116, 116);
-  --mobile-nav-submenu-bg: rgba(0, 0, 0, 0.1);
+  --mobile-nav-dropdown-border: #AD88C6;
+  --mobile-nav-submenu-bg: rgba(236, 235, 235, 0.2);
 }
 
 .dark-theme {
   --container-main: rgb(3, 0, 31);
   --container-color: rgba(255, 255, 255, 0.87);
   --gpt-background: rgba(28, 30, 58, 1);
+  --gpt-text: #fff;
   --brand-color: rgb(249, 247, 247);
   --sidebar-border: rgb(100, 100, 100);
   --sidebar-query-text: rgba(222, 222, 222, 1);
@@ -33,12 +37,14 @@
   --lowerbar-border-color: wheat;
   --chat-btn-bg: #5a4bff;
   --input-background: rgba(28, 30, 58, 1);
+  --list-items-icons: #AD88C6;
   --input-text: rgb(255, 255, 255);
   --chat-text: #efefef;
   --chat-footer-bg: rgb(3, 0, 31);
   --chat-footer-text: #b4b2b2;
   --mobile-nav-background: rgb(3, 0, 31);
   --mobile-nav-border: rgb(73, 73, 73);
+  --mobile-nav-dropdown-text: #fff;
   --mobile-nav-dropdown-bg: rgba(255, 255, 255, 0.2);
   --mobile-nav-dropdown-border: rgb(116, 116, 116);
   --mobile-nav-submenu-bg: rgba(0, 0, 0, 0.1);
@@ -141,17 +147,19 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-left: 0.8rem;
+}
+
+.query > .message-icon {
+  font-size: 1rem;
+  color: var(--list-items-icons);
 }
 
 .query:active {
   transform: scale(0.98);
-  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+  box-shadow: 3px 2px 22px 1px rgba(205, 204, 204, 0.24);
 }
-.query > img {
-  margin-right: 1.8rem;
-  object-fit: cover;
-  height: 1.2rem;
-}
+
 
 .addBtn {
   height: 1rem;
@@ -180,7 +188,7 @@
 }
 
 .listItems-icon {
-  color: #AD88C6;
+  color: var(--list-items-icons);
 }
 
 .main {
@@ -225,6 +233,7 @@
 
 .gpt {
   background: var(--gpt-background);
+  color: var(--gpt-text);
   width: fit-content;
   border-radius: 0.5rem;
 }
@@ -253,6 +262,7 @@
 
 .inp > input {
   width: calc(100% - 3rem);
+  font-size: 14px;
   outline: none;
   padding: 1.25rem 0.4rem;
   color: var(--input-text)
@@ -385,6 +395,7 @@
     text-align: center;
     width: 100%;
     padding: 1.2rem 0;
+    color: var(--mobile-nav-dropdown-text);
   }
 
   .mobile-dropdown-items:nth-child(2)  {
@@ -419,9 +430,10 @@
     transition: all 0.5s ease-in-out;
   }
 
+
   .recent-query:active {
     transform: scale(0.98);
-    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+    box-shadow: 3px 2px 22px 1px rgba(213, 212, 212, 0.24);
   }
 
   .recent-query > p {
@@ -473,6 +485,7 @@
   }
 
   .sendBtn {
+    margin-top: 0.15rem;
     width: 2.5rem;
     padding: 0.5rem 0.8rem;
   }
