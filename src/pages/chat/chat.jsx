@@ -16,6 +16,8 @@ import SpeechRecognition, {
 import {
   faCircleChevronDown,
   faCircleChevronUp,
+  faHouse,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { convertFileSize } from "../../services/pipelines";
 
@@ -338,7 +340,6 @@ const Chat = () => {
     return null;
   }
 
-
   return (
     <>
       <div className="container">
@@ -419,10 +420,10 @@ const Chat = () => {
           </div>
           <div className="lowerSide">
             <div className="listItems">
-            <FontAwesomeIcon icon={faCircleChevronUp} /> Home
+              <FontAwesomeIcon icon={faHouse} className="listItems-icon" /> Home
             </div>
             <div className="listItems">
-            <FontAwesomeIcon icon={faCircleChevronUp} /> Clear Recent
+              <FontAwesomeIcon icon={faTrash} className="listItems-icon" /> Clear Recent
             </div>
           </div>
         </div>
