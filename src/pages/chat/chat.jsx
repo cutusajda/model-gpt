@@ -6,25 +6,24 @@ import SendBtn from "../../assets/send.svg";
 import GPTLogo from "../../assets/logo.png";
 import { Player } from "@lordicon/react";
 import Plus from "../../assets/plus.png";
-import Home from "../../assets/home.svg";
 import talk from "../../assets/mic.json";
 import APIService from "../../services/gpt";
-import Upgrade from "../../assets/rocket.svg";
 import UserIcon from "../../assets/user-icon.jpg";
-import MessageIcon from "../../assets/message.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import {
   faCircleChevronDown,
   faCircleChevronUp,
+  faHouse,
+  faMessage,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import {convertFileSize} from '../../services/pipelines';
+import { convertFileSize } from "../../services/pipelines";
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
   const [systemState, setSystemState] = useState(false);
-
 
   let chat_template = {
     id: 0,
@@ -43,48 +42,64 @@ const Chat = () => {
     {
       command: "system state *",
       callback: (state) => {
+
+        let systemMessage = "";
+        let systemBotMessage = {
+          text: "System Control: Hi I'm System State, I Have The Highest Authority Over The System",
+        isBot: true,
+        };
+
         if (state === "production") {
           setAppType("production");
-          setMessages([
-            ...messages,
-            {
-              text: `System Control: Sytem running in production mode`,
-              isBot: true,
-            },
-          ]);
+          systemMessage = `System Control: Sytem running in production mode`;
           setSystemState(true);
         } else if (state === "develop" || state === "develope") {
           setAppType("develop");
-          setMessages([
-            ...messages,
-            {
-              text: `System Control: Sytem running in develop mode. All API calls are forbidden`,
-              isBot: true,
-            },
-          ]);
+          systemMessage = `System Control: Sytem running in develop mode. All API calls are forbidden`;
           setSystemState(true);
         } else if (state === "info") {
-          setMessages([
-            ...messages,
-            {
-              text: `System Control: Sytem running in develop mode. Storage: ${convertFileSize(new Blob(Object.values(localStorage.getItem("chat"))).size)}`,
-              isBot: true,
-            },
-          ]);
+          systemMessage = `System Control: Sytem running in develop mode. Storage: ${convertFileSize(
+            new Blob(Object.values(localStorage.getItem("chat"))).size
+          )}`;
           setSystemState(true);
+        } else if (state === "dark mode") {
+          setTheme("dark-theme");
+          setSystemState(true);
+          systemMessage = `System Control: Sytem Dark Mode Enbled 😎`;
+          localStorage.setItem("theme", "dark-theme");
+        } else if (state === "light mode") {
+          setTheme("light-theme");
+          setSystemState(true);
+          systemMessage = `System Control: Sytem Light Mode Enbled 🥰`;
+          localStorage.setItem("theme", "light-theme");
         } else {
-          setMessages([
-            ...messages,
-            { text: "System Control: Sytem Access Denied", isBot: true },
-          ]);
+          systemMessage = "System Control: Sytem Access Denied";
           setSystemState(true);
         }
+        
+        // Saving Bot Message to localStorage
+        systemBotMessage.text = systemMessage;
+        updateLocalStorage(inputValue,systemBotMessage, true);
+
+        setMessages([
+          ...messages,
+          {
+            text: systemMessage,
+            isBot: true,
+          },
+        ]);
       },
     },
     {
       command: "system self destruct",
       callback: () => {
         clearChats();
+      },
+    },
+    {
+      command: "system shutdown",
+      callback: () => {
+        window.close();
       },
     },
   ];
@@ -108,10 +123,45 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeChat, isActive] = useState(0);
 
+  const [theme, setTheme] = useState("dark-theme");
+
   // Function To Change Input Value
   const handleChange = (event) => {
     setInputValue(event.target.value);
   };
+
+
+  const updateLocalStorage = (inputValue, bot_message, system=false) => {
+    // Parse the chat from local storage
+    let local_storage_chat = JSON.parse(localStorage.getItem("chat"));
+    console.log(inputValue);
+    // Create a user message object
+    let user_message = {
+        text: inputValue,
+        isBot: false,
+    };
+
+    // Get the active message
+    let active_message = local_storage_chat[activeChat];
+
+    // If this is the first message in the chat, set the title
+    if (active_message.message.length === 1) {
+        active_message.title = inputValue;
+    }
+
+    // Push the user and bot messages to the active message
+    if (!system){
+      active_message.message.push(user_message);
+    }
+    active_message.message.push(bot_message);
+
+    // Update the chat in local storage
+    localStorage.setItem("chat", JSON.stringify(local_storage_chat));
+
+    // Update the query
+    setQuery(local_storage_chat);
+}
+
 
   // Function to POST Prompt to GPT4 Turbo
   const handleClick = async () => {
@@ -124,7 +174,6 @@ const Chat = () => {
 
     // Closing Mobile Navbar Menu
     setIsOpen(false);
-    console.log("App Type", appType);
     const data = await APIService(inputValue, appType);
     setIsLoading(false); // Set loading state to false after API call
 
@@ -159,23 +208,7 @@ const Chat = () => {
       };
     }
 
-    // Set Message to Local Storage
-    let local_storage_chat = JSON.parse(localStorage.getItem("chat"));
-
-    let user_message = {
-      text: inputValue,
-      isBot: false,
-    };
-
-    let active_message = local_storage_chat[activeChat];
-    if (active_message.message.length === 1) {
-      active_message.title = inputValue;
-    }
-
-    active_message.message.push(user_message);
-    active_message.message.push(bot_message);
-    localStorage.setItem("chat", JSON.stringify(local_storage_chat));
-    setQuery(local_storage_chat);
+    updateLocalStorage(inputValue, bot_message);
   };
 
   useEffect(() => {
@@ -191,12 +224,17 @@ const Chat = () => {
 
     if (systemState) {
       // Recet Input Value After System Calls
-      console.log(systemState)
       setInputValue("");
       setSystemState(false);
       resetTranscript();
     }
-  }, [messages, listening, systemState, transcript, resetTranscript]);
+
+    // Setting The Theme From Local Storage
+    if (localStorage.getItem("theme")) {
+      setTheme(localStorage.getItem("theme"));
+    }
+    document.body.className = theme;
+  }, [messages, listening, systemState, transcript, resetTranscript, theme]);
 
   useLayoutEffect(() => {
     let local_storage_chat = localStorage.getItem("chat");
@@ -401,7 +439,7 @@ const Chat = () => {
                   className="query"
                   onClick={() => handleSelectChat(i)}
                 >
-                  <img src={MessageIcon} alt="Previous Chats" />
+                  <FontAwesomeIcon icon={faMessage} className="message-icon" />
                   <p>{message.title}</p>
                 </div>
               ))}
@@ -409,10 +447,11 @@ const Chat = () => {
           </div>
           <div className="lowerSide">
             <div className="listItems">
-              <img src={Home} alt="" className="listItemsImg" /> Home
+              <FontAwesomeIcon icon={faHouse} className="listItems-icon" /> Home
             </div>
             <div className="listItems">
-              <img src={Upgrade} alt="" className="listItemsImg" /> Clear Recent
+              <FontAwesomeIcon icon={faTrash} className="listItems-icon" />{" "}
+              Clear Recent
             </div>
           </div>
         </div>
