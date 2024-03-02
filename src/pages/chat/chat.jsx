@@ -6,10 +6,8 @@ import SendBtn from "../../assets/send.svg";
 import GPTLogo from "../../assets/logo.png";
 import { Player } from "@lordicon/react";
 import Plus from "../../assets/plus.png";
-import Home from "../../assets/home.svg";
 import talk from "../../assets/mic.json";
 import APIService from "../../services/gpt";
-import Upgrade from "../../assets/rocket.svg";
 import UserIcon from "../../assets/user-icon.jpg";
 import MessageIcon from "../../assets/message.svg";
 import SpeechRecognition, {
@@ -19,12 +17,11 @@ import {
   faCircleChevronDown,
   faCircleChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import {convertFileSize} from '../../services/pipelines';
+import { convertFileSize } from "../../services/pipelines";
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
   const [systemState, setSystemState] = useState(false);
-
 
   let chat_template = {
     id: 0,
@@ -67,10 +64,18 @@ const Chat = () => {
           setMessages([
             ...messages,
             {
-              text: `System Control: Sytem running in develop mode. Storage: ${convertFileSize(new Blob(Object.values(localStorage.getItem("chat"))).size)}`,
+              text: `System Control: Sytem running in develop mode. Storage: ${convertFileSize(
+                new Blob(Object.values(localStorage.getItem("chat"))).size
+              )}`,
               isBot: true,
             },
           ]);
+          setSystemState(true);
+        } else if (state === "dark mode") {
+          setTheme("dark-theme");
+          setSystemState(true);
+        } else if (state === "light mode") {
+          setTheme("light-theme");
           setSystemState(true);
         } else {
           setMessages([
@@ -108,8 +113,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeChat, isActive] = useState(0);
 
-  const [theme, setTheme] = useState('dark-theme');
-
+  const [theme, setTheme] = useState("light-theme");
 
   // Function To Change Input Value
   const handleChange = (event) => {
@@ -194,7 +198,7 @@ const Chat = () => {
 
     if (systemState) {
       // Recet Input Value After System Calls
-      console.log(systemState)
+      console.log(systemState);
       setInputValue("");
       setSystemState(false);
       resetTranscript();
@@ -335,10 +339,6 @@ const Chat = () => {
   }
 
 
-  const changeColorScheme = () => {
-    
-  }
-
   return (
     <>
       <div className="container">
@@ -419,10 +419,10 @@ const Chat = () => {
           </div>
           <div className="lowerSide">
             <div className="listItems">
-              <img src={Home} alt="" className="listItemsImg" /> Home
+            <FontAwesomeIcon icon={faCircleChevronUp} /> Home
             </div>
             <div className="listItems">
-              <img src={Upgrade} alt="" className="listItemsImg" /> Clear Recent
+            <FontAwesomeIcon icon={faCircleChevronUp} /> Clear Recent
             </div>
           </div>
         </div>

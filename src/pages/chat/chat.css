@@ -1,16 +1,18 @@
 .light-theme {
-  --container-main: rgb(245, 245, 250);
+  --container-main: #FFE6E6;
   --container-color: rgba(255, 255, 255, 0.87);
-  --gpt-background: rgba(28, 30, 58, 1);
+  --gpt-background: #E1AFD1;
   --brand-color: black;
   --sidebar-border: rgb(100, 100, 100);
   --sidebar-query-text: rgb(7, 0, 0);
   --uppertop-border: rgb(100, 100, 100);
   --lowerbar-text: rgb(69, 69, 6);
   --lowerbar-border-color: rgb(15, 15, 15);
-  --input-background: rgba(28, 30, 58, 1);
+  --input-background: #E1AFD1;
   --input-text: rgb(255, 255, 255);
-  --chat-text: #4fc2c0;
+  --chat-btn-bg: #7469B6;
+  --chat-text: rgb(3, 0, 31);
+  --chat-footer-bg: #FFE6E6;
   --chat-footer-text: #b4b2b2;
   --mobile-nav-background: rgb(3, 0, 31);
   --mobile-nav-border: rgb(73, 73, 73);
@@ -29,9 +31,11 @@
   --uppertop-border: rgb(100, 100, 100);
   --lowerbar-text: rgb(219, 219, 211);
   --lowerbar-border-color: wheat;
+  --chat-btn-bg: #5a4bff;
   --input-background: rgba(28, 30, 58, 1);
   --input-text: rgb(255, 255, 255);
   --chat-text: #efefef;
+  --chat-footer-bg: rgb(3, 0, 31);
   --chat-footer-text: #b4b2b2;
   --mobile-nav-background: rgb(3, 0, 31);
   --mobile-nav-border: rgb(73, 73, 73);
@@ -91,7 +95,7 @@
   min-width: 15rem;
   align-items: center;
   justify-content: center;
-  background-color: #5a4bff;
+  background-color: var(--chat-btn-bg);
   border: None;
   color: white;
   padding: 0.7rem;
@@ -167,23 +171,11 @@
   margin: 0.75rem;
   border: 1px solid var(--lowerbar-border-color);
   border-radius: 0.5rem;
+  padding: 0.5rem;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
   font-size: 0.9rem;
-}
-
-.listItemsImg {
-  margin: 1rem;
-  width: 2rem;
-  padding-right: 1rem;
-}
-
-.listItems:first-child > .listItemsImg {
-  margin-right: 0.3rem;
-}
-
-.listItems:last-child > .listItemsImg {
-  margin-right: 0.45rem;
 }
 
 .main {
@@ -233,7 +225,7 @@
 }
 
 .chatFooter {
-  background-color: rgb(3, 0, 31);
+  background-color: var(--chat-footer-bg);
   width: calc(77% - 9.5rem);
   margin: auto 1rem 0 1rem;
   padding: 1rem 0 0 0;
@@ -285,7 +277,8 @@
 .sendBtn {
   text-decoration: none;
   border: none;
-  padding: 12px 40px;
+  margin-right: 1rem;
+  padding: 10px 16px;
   font-size: 16px;
   border-radius: 5px;
   box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
