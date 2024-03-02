@@ -1,26 +1,31 @@
 import "./chat.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Menu from "../../assets/category.json";
+import SendBtn from "../../assets/send.svg";
+import GPTLogo from "../../assets/logo.png";
 import { Player } from "@lordicon/react";
 import Plus from "../../assets/plus.png";
 import Home from "../../assets/home.svg";
-import SendBtn from "../../assets/send.svg";
-import GPTLogo from "../../assets/logo.png";
+import talk from "../../assets/mic.json";
 import APIService from "../../services/gpt";
-import Menu from "../../assets/category.json";
 import Upgrade from "../../assets/rocket.svg";
 import UserIcon from "../../assets/user-icon.jpg";
 import MessageIcon from "../../assets/message.svg";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import {
   faCircleChevronDown,
   faCircleChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import talk from "../../assets/mic.json";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import {convertFileSize} from '../../services/pipelines';
 
 const Chat = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [systemState, setSystemState] = useState(false);
+
+
   let chat_template = {
     id: 0,
     title: "Untitled Chat",
@@ -32,18 +37,70 @@ const Chat = () => {
     ],
   };
 
+  const [appType, setAppType] = useState("develop");
+
+  const commands = [
+    {
+      command: "system state *",
+      callback: (state) => {
+        if (state === "production") {
+          setAppType("production");
+          setMessages([
+            ...messages,
+            {
+              text: `System Control: Sytem running in production mode`,
+              isBot: true,
+            },
+          ]);
+          setSystemState(true);
+        } else if (state === "develop" || state === "develope") {
+          setAppType("develop");
+          setMessages([
+            ...messages,
+            {
+              text: `System Control: Sytem running in develop mode. All API calls are forbidden`,
+              isBot: true,
+            },
+          ]);
+          setSystemState(true);
+        } else if (state === "info") {
+          setMessages([
+            ...messages,
+            {
+              text: `System Control: Sytem running in develop mode. Storage: ${convertFileSize(new Blob(Object.values(localStorage.getItem("chat"))).size)}`,
+              isBot: true,
+            },
+          ]);
+          setSystemState(true);
+        } else {
+          setMessages([
+            ...messages,
+            { text: "System Control: Sytem Access Denied", isBot: true },
+          ]);
+          setSystemState(true);
+        }
+      },
+    },
+    {
+      command: "system self destruct",
+      callback: () => {
+        clearChats();
+      },
+    },
+  ];
+
   // Required Configurations For Speech-To-Text
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  } = useSpeechRecognition({ commands });
+
   const startListning = () =>
     SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
 
   const messageEnd = useRef(null);
-  const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [query, setQuery] = useState([chat_template]);
 
@@ -54,7 +111,6 @@ const Chat = () => {
   // Function To Change Input Value
   const handleChange = (event) => {
     setInputValue(event.target.value);
-    setInputValue("");
   };
 
   // Function to POST Prompt to GPT4 Turbo
@@ -68,14 +124,40 @@ const Chat = () => {
 
     // Closing Mobile Navbar Menu
     setIsOpen(false);
-
-    const data = await APIService(inputValue);
+    console.log("App Type", appType);
+    const data = await APIService(inputValue, appType);
     setIsLoading(false); // Set loading state to false after API call
-    setMessages([
-      ...messages,
-      { text, isBot: false },
-      { text: data ? data : "Try again later", isBot: true },
-    ]);
+
+    let bot_message = {
+      text: data ? data : "Try again later",
+      isBot: true,
+    };
+
+    if (appType === "production") {
+      setMessages([
+        ...messages,
+        { text, isBot: false },
+        { text: data ? data : "Try again later", isBot: true },
+      ]);
+    } else if (appType === "develop") {
+      setMessages([
+        ...messages,
+        { text, isBot: false },
+        {
+          text: data
+            ? data
+            : "System Control: You are in development mode all API calls are forbidden",
+          isBot: true,
+        },
+      ]);
+
+      bot_message = {
+        text: data
+          ? data
+          : "System Control: You are in development mode all API calls are forbidden",
+        isBot: true,
+      };
+    }
 
     // Set Message to Local Storage
     let local_storage_chat = JSON.parse(localStorage.getItem("chat"));
@@ -83,11 +165,6 @@ const Chat = () => {
     let user_message = {
       text: inputValue,
       isBot: false,
-    };
-
-    let bot_message = {
-      text: data ? data : "Try again later",
-      isBot: true,
     };
 
     let active_message = local_storage_chat[activeChat];
@@ -111,7 +188,15 @@ const Chat = () => {
     if (listening) {
       setInputValue(transcript);
     }
-  }, [messages, listening, transcript]);
+
+    if (systemState) {
+      // Recet Input Value After System Calls
+      console.log(systemState)
+      setInputValue("");
+      setSystemState(false);
+      resetTranscript();
+    }
+  }, [messages, listening, systemState, transcript, resetTranscript]);
 
   useLayoutEffect(() => {
     let local_storage_chat = localStorage.getItem("chat");
