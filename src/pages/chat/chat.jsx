@@ -1,28 +1,30 @@
 import "./chat.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Menu from "../../assets/category.json";
+import SendBtn from "../../assets/send.svg";
+import GPTLogo from "../../assets/logo.png";
 import { Player } from "@lordicon/react";
 import Plus from "../../assets/plus.png";
 import Home from "../../assets/home.svg";
-import SendBtn from "../../assets/send.svg";
-import GPTLogo from "../../assets/logo.png";
+import talk from "../../assets/mic.json";
 import APIService from "../../services/gpt";
-import Menu from "../../assets/category.json";
 import Upgrade from "../../assets/rocket.svg";
 import UserIcon from "../../assets/user-icon.jpg";
 import MessageIcon from "../../assets/message.svg";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import {
   faCircleChevronDown,
   faCircleChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import talk from "../../assets/mic.json";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import {convertFileSize} from '../../services/pipelines';
 
 const Chat = () => {
-
   const [inputValue, setInputValue] = useState("");
+  const [systemState, setSystemState] = useState(false);
+
 
   let chat_template = {
     id: 0,
@@ -50,7 +52,8 @@ const Chat = () => {
               isBot: true,
             },
           ]);
-        } else if (state === "develop") {
+          setSystemState(true);
+        } else if (state === "develop" || state === "develope") {
           setAppType("develop");
           setMessages([
             ...messages,
@@ -59,12 +62,29 @@ const Chat = () => {
               isBot: true,
             },
           ]);
+          setSystemState(true);
+        } else if (state === "info") {
+          setMessages([
+            ...messages,
+            {
+              text: `System Control: Sytem running in develop mode. Storage: ${convertFileSize(new Blob(Object.values(localStorage.getItem("chat"))).size)}`,
+              isBot: true,
+            },
+          ]);
+          setSystemState(true);
         } else {
           setMessages([
             ...messages,
             { text: "System Control: Sytem Access Denied", isBot: true },
           ]);
+          setSystemState(true);
         }
+      },
+    },
+    {
+      command: "system self destruct",
+      callback: () => {
+        clearChats();
       },
     },
   ];
@@ -97,8 +117,6 @@ const Chat = () => {
   const handleClick = async () => {
     const text = inputValue;
 
-    
-
     setInputValue("");
     setMessages([...messages, { text, isBot: false }]);
 
@@ -106,7 +124,7 @@ const Chat = () => {
 
     // Closing Mobile Navbar Menu
     setIsOpen(false);
-
+    console.log("App Type", appType);
     const data = await APIService(inputValue, appType);
     setIsLoading(false); // Set loading state to false after API call
 
@@ -121,7 +139,6 @@ const Chat = () => {
         { text, isBot: false },
         { text: data ? data : "Try again later", isBot: true },
       ]);
-
     } else if (appType === "develop") {
       setMessages([
         ...messages,
@@ -171,7 +188,15 @@ const Chat = () => {
     if (listening) {
       setInputValue(transcript);
     }
-  }, [messages, listening, transcript]);
+
+    if (systemState) {
+      // Recet Input Value After System Calls
+      console.log(systemState)
+      setInputValue("");
+      setSystemState(false);
+      resetTranscript();
+    }
+  }, [messages, listening, systemState, transcript, resetTranscript]);
 
   useLayoutEffect(() => {
     let local_storage_chat = localStorage.getItem("chat");
