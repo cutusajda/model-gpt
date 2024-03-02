@@ -329,6 +329,10 @@ const Chat = () => {
     return null;
   }
 
+  const changeColorScheme = () => {
+    
+  }
+
   return (
     <>
       <div className="container">
