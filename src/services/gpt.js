@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const ApiService = async (input) => {
+const ApiService = async (input, app) => {
   // const options_gpt4 = {
   //   method: "POST",
   //   url: "https://chatgpt-gpt4-ai-chatbot.p.rapidapi.com/ask",
@@ -32,10 +32,17 @@ const ApiService = async (input) => {
   //       }
   //     };
 
+  let url = "";
+  if (app === "production") {
+    url =
+      "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com/v1/chat/completions";
+  } else if (app === "develop") {
+    url = "";
+  }
+
   const options_gpt4_turbo_vision = {
     method: "POST",
-    url: "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com/v1/chat/completions",
-    // url: "",
+    url: url,
     headers: {
       "content-type": "application/json",
       "X-RapidAPI-Key": "56de684541msh2f8845fc14c2dd4p16d205jsn386531eb3949",

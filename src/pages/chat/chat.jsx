@@ -21,6 +21,9 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 
 const Chat = () => {
+
+  const [inputValue, setInputValue] = useState("");
+
   let chat_template = {
     id: 0,
     title: "Untitled Chat",
@@ -32,18 +35,52 @@ const Chat = () => {
     ],
   };
 
+  const [appType, setAppType] = useState("develop");
+
+  const commands = [
+    {
+      command: "system state *",
+      callback: (state) => {
+        if (state === "production") {
+          setAppType("production");
+          setMessages([
+            ...messages,
+            {
+              text: `System Control: Sytem running in production mode`,
+              isBot: true,
+            },
+          ]);
+        } else if (state === "develop") {
+          setAppType("develop");
+          setMessages([
+            ...messages,
+            {
+              text: `System Control: Sytem running in develop mode. All API calls are forbidden`,
+              isBot: true,
+            },
+          ]);
+        } else {
+          setMessages([
+            ...messages,
+            { text: "System Control: Sytem Access Denied", isBot: true },
+          ]);
+        }
+      },
+    },
+  ];
+
   // Required Configurations For Speech-To-Text
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  } = useSpeechRecognition({ commands });
+
   const startListning = () =>
     SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
 
   const messageEnd = useRef(null);
-  const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [query, setQuery] = useState([chat_template]);
 
@@ -54,12 +91,13 @@ const Chat = () => {
   // Function To Change Input Value
   const handleChange = (event) => {
     setInputValue(event.target.value);
-    setInputValue("");
   };
 
   // Function to POST Prompt to GPT4 Turbo
   const handleClick = async () => {
     const text = inputValue;
+
+    
 
     setInputValue("");
     setMessages([...messages, { text, isBot: false }]);
@@ -69,13 +107,40 @@ const Chat = () => {
     // Closing Mobile Navbar Menu
     setIsOpen(false);
 
-    const data = await APIService(inputValue);
+    const data = await APIService(inputValue, appType);
     setIsLoading(false); // Set loading state to false after API call
-    setMessages([
-      ...messages,
-      { text, isBot: false },
-      { text: data ? data : "Try again later", isBot: true },
-    ]);
+
+    let bot_message = {
+      text: data ? data : "Try again later",
+      isBot: true,
+    };
+
+    if (appType === "production") {
+      setMessages([
+        ...messages,
+        { text, isBot: false },
+        { text: data ? data : "Try again later", isBot: true },
+      ]);
+
+    } else if (appType === "develop") {
+      setMessages([
+        ...messages,
+        { text, isBot: false },
+        {
+          text: data
+            ? data
+            : "System Control: You are in development mode all API calls are forbidden",
+          isBot: true,
+        },
+      ]);
+
+      bot_message = {
+        text: data
+          ? data
+          : "System Control: You are in development mode all API calls are forbidden",
+        isBot: true,
+      };
+    }
 
     // Set Message to Local Storage
     let local_storage_chat = JSON.parse(localStorage.getItem("chat"));
@@ -83,11 +148,6 @@ const Chat = () => {
     let user_message = {
       text: inputValue,
       isBot: false,
-    };
-
-    let bot_message = {
-      text: data ? data : "Try again later",
-      isBot: true,
     };
 
     let active_message = local_storage_chat[activeChat];
