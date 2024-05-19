@@ -36,7 +36,7 @@ const Chat = () => {
     ],
   };
 
-  const [appType, setAppType] = useState("develop");
+  const [appType, setAppType] = useState("production");
 
   const commands = [
     {
